@@ -1,9 +1,11 @@
-FROM alpine:latest
+FROM ubuntu:20.04
 
-RUN apk add --no-cache dante-server
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y squid && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY danted.conf /etc/
+COPY squid.conf /etc/squid/squid.conf
 
-EXPOSE 1080
+EXPOSE 3128
 
-CMD ["sockd", "-f", "/etc/danted.conf"]
+CMD ["squid", "-N", "-d", "1"]
